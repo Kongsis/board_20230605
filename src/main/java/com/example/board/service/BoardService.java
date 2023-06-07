@@ -7,6 +7,7 @@ import com.example.board.repository.BoardFileRepository;
 import com.example.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
@@ -25,7 +26,8 @@ public class BoardService {
     public Long save(BoardDTO boardDTO) throws IOException {
 //        BoardEntity boardEntity = BoardEntity.toSaveEntity(boardDTO);
 //        return boardRepository.save(boardEntity).getId();
-        if(boardDTO.getBoardFile().isEmpty()) {
+//        if(boardDTO.getBoardFile().isEmpty()) {
+        if(boardDTO.getBoardFile().get(0).isEmpty()) {
             // 파일 없음
             BoardEntity boardEntity = BoardEntity.toSaveEntity(boardDTO);
             return boardRepository.save(boardEntity).getId();
@@ -35,15 +37,24 @@ public class BoardService {
             BoardEntity boardEntity = BoardEntity.toSaveEntityWithFile(boardDTO);
             BoardEntity savedEntity = boardRepository.save(boardEntity);
             // 2. 파일이름 꺼내고, 저장용 이름 만들고 파일 로컬에 저장
-            String originalFileName = boardDTO.getBoardFile().getOriginalFilename();
-            String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
-            String savePath = "D:\\springboot_img\\" + storedFileName;
-            boardDTO.getBoardFile().transferTo(new File(savePath));
+//            String originalFileName = boardDTO.getBoardFile().getOriginalFilename();
+//            String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
+//            String savePath = "D:\\springboot_img\\" + storedFileName;
+//            boardDTO.getBoardFile().transferTo(new File(savePath));
+            for (MultipartFile boardFile: boardDTO.getBoardFile()) {
+                String originalFileName = boardFile.getOriginalFilename();
+                String storedFileName = System.currentTimeMillis() + "_" + originalFileName;
+                String savePath = "D:\\springboot_img\\" + storedFileName;
+                boardFile.transferTo(new File(savePath));
+                BoardFileEntity boardFileEntity =
+                        BoardFileEntity.toSaveBoardFileEntity(savedEntity, originalFileName, storedFileName);
+                boardFileRepository.save(boardFileEntity);
+            }
             // 3. BoardFileEntity 로 변환 후 board_file_table 에 저장
             // 자식 데이터를 저장할 때 반드시 부모의 id가 아닌 부모의 Entity 객체가 전달돼야 함.
-            BoardFileEntity boardFileEntity =
-                    BoardFileEntity.toSaveBoardFileEntity(savedEntity, originalFileName, storedFileName);
-            boardFileRepository.save(boardFileEntity);
+//            BoardFileEntity boardFileEntity =
+//                    BoardFileEntity.toSaveBoardFileEntity(savedEntity, originalFileName, storedFileName);
+//            boardFileRepository.save(boardFileEntity);
             return savedEntity.getId();
         }
     }
