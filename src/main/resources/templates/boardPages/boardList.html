@@ -15,9 +15,6 @@
                 <th>writer</th>
                 <th>date</th>
                 <th>hits</th>
-                <th>조회</th>
-<!--                <th>수정</th>-->
-<!--                <th>삭제</th>-->
             </tr>
             <tr th:each="board: ${boardList}">
                 <td th:text="${board.id}"></td>
@@ -25,36 +22,27 @@
                 <td th:text="${board.boardWriter}"></td>
                 <td th:text="${board.createdAt}"></td>
                 <td th:text="${board.boardHits}"></td>
-                <td>
-                    <button th:onclick="board_detail([[${board.id}]])">조회</button>
-                </td>
-<!--                <td>-->
-<!--                    <button onclick="update()">수정</button>-->
-<!--                </td>-->
-<!--                <td>-->
-<!--                    <button th:onclick="board_delete([[${board.id}]])">삭제</button>-->
-<!--                </td>-->
             </tr>
         </table>
     </div>
 </div>
 <div th:replace="component/footer :: footer"></div>
 </body>
-<script>
-    const update = () => {
-        location.href = "/board/update";
-    }
+<!--<script>-->
+<!--    const update = () => {-->
+<!--        location.href = "/board/update";-->
+<!--    }-->
 
-    const board_delete = (id) => {
-        axios({
-            method: "delete",
-            url: "/board/" + id
-        }).then(res => {
-            alert("삭제완료! 확인을 클릭하면 목록으로 돌아갑니다!");
-            location.href = "/board/";
-        }).catch(err => {
-            alert("삭제실패!");
-        });
-    }
-</script>
+<!--    const board_delete = (id) => {-->
+<!--        axios({-->
+<!--            method: "delete",-->
+<!--            url: "/board/" + id-->
+<!--        }).then(res => {-->
+<!--            alert("삭제완료! 확인을 클릭하면 목록으로 돌아갑니다!");-->
+<!--            location.href = "/board/";-->
+<!--        }).catch(err => {-->
+<!--            alert("삭제실패!");-->
+<!--        });-->
+<!--    }-->
+<!--</script>-->
 </html>

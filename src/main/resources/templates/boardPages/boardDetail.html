@@ -34,8 +34,10 @@
         </table>
         <div class="container">
             <button class="btn btn-primary" onclick="list_req()">목록</button>
-            <button class="btn btn-warning" onclick="update_req()">수정</button>
-            <button class="btn btn-danger" onclick="delete_req()">삭제</button>
+<!--            <button class="btn btn-warning" onclick="update_req()">수정</button>-->
+            <button class="btn btn-warning" onclick="req('update')">수정</button>
+<!--            <button class="btn btn-danger" onclick="delete_req()">삭제</button>-->
+            <button class="btn btn-warning" onclick="req('delete')">삭제</button>
         </div>
     </div>
     <div id="pass-check">
@@ -50,14 +52,44 @@
         location.href = "/board/";
     }
 
-    const update_req = () => {
+    // const update_req = () => {
+    //     document.getElementById("pass-check").innerHTML = "<input type=\"text\" placeholder=\"password\" id=\"password\">\n" +
+    //         "        <button onclick=\"update_pass_check()\">확인</button>"
+    // }
+    //
+    // const delete_req = () => {
+    //     document.getElementById("pass-check").innerHTML = "<input type=\"text\" placeholder=\"password\" id=\"password\">\n" +
+    //         "        <button onclick=\"delete_pass_check()\">확인</button>"
+    // }
+
+    const req = (type) => {
+        console.log("type", type);
         document.getElementById("pass-check").innerHTML = "<input type=\"text\" placeholder=\"password\" id=\"password\">\n" +
-            "        <button onclick=\"update_pass_check()\">확인</button>"
+            "        <button onclick=\"pass_check('" + type + "')\">확인</button>";
     }
 
-    const delete_req = () => {
-        document.getElementById("pass-check").innerHTML = "<input type=\"text\" placeholder=\"password\" id=\"password\">\n" +
-            "        <button onclick=\"delete_pass_check()\">확인</button>"
+    const pass_check = (type) => {
+        console.log("pass_check type 변수 값", type);
+        const password = document.getElementById("password").value;
+        const passDB = [[${board.boardPass}]];
+        const id = [[${board.id}]];
+        if(password == passDB) {
+            if(type == "update") {
+                location.href = "/board/update/" + id;
+            } else if(type == "delete") {
+                // location.href = "board/delete/" + id;
+                axios({
+                    method: "delete",
+                    url: "/board/"+id
+                }).then(res => {
+                    location.href = "/board/";
+                }).catch(err => {
+                    alert("삭제 실패!!");
+                });
+            }
+        } else {
+            alert("비밀번호가 일치하지 않습니다.");
+        }
     }
 
     const update_pass_check = () => {
@@ -65,7 +97,7 @@
         const passDB = [[${board.boardPass}]];
         const id = [[${board.id}]];
         if(password == passDB) {
-            location.hrem = "/board/update/" + id;
+            location.href = "/board/update/" + id;
         } else {
             alert("비밀번호가 일치하지 않습니다.");
         }
@@ -84,7 +116,7 @@
                 location.href = "/board/";
             }).catch(err => {
                 alert("삭제 실패!!");
-            })
+            });
         } else {
             alert("비밀번호가 일치하지 않습니다.");
         }
