@@ -34,6 +34,16 @@ public class BoardDTO {
         boardDTO.setBoardContents(boardEntity.getBoardContents());
         boardDTO.setBoardHits(boardEntity.getBoardHits());
         boardDTO.setCreatedAt(boardEntity.getCreatedAt());
+
+        // 파일 여부에 따른 코드 추가
+        if(boardEntity.getFileAttached() == 1) {
+            boardDTO.setFileAttached(1);
+            boardDTO.setOriginalFileName(boardEntity.getBoardFileEntityList().get(0).getOriginalFileName());
+            boardDTO.setStoredFileName(boardEntity.getBoardFileEntityList().get(0).getStoredFileName());
+        } else {
+            boardDTO.setFileAttached(0);
+        }
+
         return boardDTO;
         // 빌더패턴
 //        return BoardDTO.builder()
