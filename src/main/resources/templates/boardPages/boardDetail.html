@@ -26,7 +26,7 @@
             <tr>
                 <th>date</th>
 <!--                <td th:text="${board.createdAt}"></td>-->
-                <td th:text="*{temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td th:text="*{#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
             </tr>
             <tr>
                 <th>hits</th>
