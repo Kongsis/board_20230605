@@ -19,7 +19,6 @@ import java.util.NoSuchElementException;
 @Service
 @RequiredArgsConstructor
 public class BoardService {
-
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
 

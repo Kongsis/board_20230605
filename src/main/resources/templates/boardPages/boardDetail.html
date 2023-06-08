@@ -55,10 +55,38 @@
 <!--        <input type="text" placeholder="password" id="password">-->
 <!--        <button onclick="pass_check()">확인</button>-->
     </div>
+    <div class="container" id="comment-write">
+        <input type="text" id="comment-writer" placeholder="작성자">
+        <input type="text" id="comment-contents" placeholder="내용">
+        <button onclick="comment_write()">댓글작성</button>
+    </div>
+    <div class="container" id="comment-list">
+
+    </div>
 </div>
 <div th:replace="component/footer :: footer"></div>
 </body>
 <script th:inline="javascript">
+    const comment_write = () => {
+        const writer = document.querySelector("#comment-writer").value;
+        const contents = document.querySelector("#comment-contents").value;
+        const boardId = [[${board.id}]];
+        axios({
+            method: "post",
+            url: "/comment/save",
+            data: {
+                commentWriter: writer,
+                commentContents: contents,
+                boardId: boardId
+            }
+        }).then(res => {
+            console.log("res", res);
+
+        }).catch(err => {
+            console.log("err", err);
+        });
+    }
+
     const list_req = () => {
         location.href = "/board/";
     }

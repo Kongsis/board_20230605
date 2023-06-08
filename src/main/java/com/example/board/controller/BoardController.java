@@ -17,7 +17,6 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 @RequestMapping("/board")
 public class BoardController {
-
     private final BoardService boardService;
 
     @GetMapping("/save")
