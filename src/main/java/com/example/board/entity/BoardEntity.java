@@ -3,7 +3,6 @@ package com.example.board.entity;
 import com.example.board.dto.BoardDTO;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -15,7 +14,6 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "board_table")
-@ToString
 public class BoardEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
