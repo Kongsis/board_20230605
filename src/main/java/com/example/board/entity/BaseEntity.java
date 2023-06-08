@@ -24,5 +24,5 @@ public class BaseEntity {
 
     @UpdateTimestamp //업데이트 전용
     @Column(insertable = false)
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 }

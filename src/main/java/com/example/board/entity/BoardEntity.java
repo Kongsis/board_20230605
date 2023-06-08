@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @Table(name = "board_table")
 @ToString
-public class BoardEntity extends BaseEntity{
+public class BoardEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,9 +36,9 @@ public class BoardEntity extends BaseEntity{
     @Column
     private int boardHits;
 
-    @CreationTimestamp
-    @Column(updatable = false) // false 하면 insert 할때만 값이 적용됨
-    private LocalDateTime createdAt;
+//    @CreationTimestamp
+//    @Column(updatable = false) // false 하면 insert 할때만 값이 적용됨
+//    private LocalDateTime createdAt;
 
     @Column
     private int fileAttached;
