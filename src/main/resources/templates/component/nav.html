@@ -19,9 +19,10 @@
     </div>
     <div class="menu">
         <!-- /board?page=1
-             7페이지에 있는 33번글 조회
-             rest api => /board/7/33
-             /board/33 => 33번글 -->
+            7페이지에 있는 33번글 조회
+            rest api => /board/7/33
+            /board/33 => 33번글 /board/33?page=7
+        -->
         <a th:href="@{/board(page=1)}">페이징목록</a>
     </div>
     <div class="menu search">

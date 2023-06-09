@@ -111,4 +111,43 @@ public class BoardTest {
         System.out.println("boardList.isFirst() = " + boardList.isFirst()); // 첫페이지인지 여부
         System.out.println("boardList.isLast() = " + boardList.isLast()); // 마지막페이지인지 여부
     }
+
+    @Test
+    @Transactional
+    @DisplayName("검색 기능 테스트")
+    public void searchTest() {
+//        List<BoardEntity> boardEntityList = boardRepository.findByBoardTitleContaining("5");
+        String q = "30";
+        List<BoardEntity> boardEntityList = boardRepository.findByBoardTitleContainingOrBoardWriterContainingOrderByIdDesc(q, q);
+        boardEntityList.forEach(boardEntity -> {
+            System.out.println(BoardDTO.toDTO(boardEntity));
+        });
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("검색 결과 페이징")
+    public void searchPaging() {
+        String q = "2";
+        int page = 0;
+        int pageLimit = 3;
+        Page<BoardEntity> boardEntities = boardRepository.findByBoardWriterContaining(q, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC,"id")));
+        Page<BoardDTO> boardList = boardEntities.map(boardEntity ->
+                BoardDTO.builder()
+                        .id(boardEntity.getId())
+                        .boardTitle(boardEntity.getBoardTitle())
+                        .boardWriter(boardEntity.getBoardWriter())
+                        .createdAt(UtilClass.dateFormat(boardEntity.getCreatedAt()))
+                        .boardHits(boardEntity.getBoardHits())
+                        .build()
+        );
+        System.out.println("boardList.getContent() = " + boardList.getContent()); // 요청페이지에 들어있는 데이터
+        System.out.println("boardList.getTotalElements() = " + boardList.getTotalElements()); // 전체 글갯수
+        System.out.println("boardList.getNumber() = " + boardList.getNumber()); // 요청페이지(jpa 기준)
+        System.out.println("boardList.getTotalPages() = " + boardList.getTotalPages()); // 전체 페이지 갯수
+        System.out.println("boardList.getSize() = " + boardList.getSize()); // 한페이지에 보여지는 글갯수
+        System.out.println("boardList.hasPrevious() = " + boardList.hasPrevious()); // 이전페이지 존재 여부
+        System.out.println("boardList.isFirst() = " + boardList.isFirst()); // 첫페이지인지 여부
+        System.out.println("boardList.isLast() = " + boardList.isLast()); // 마지막페이지인지 여부
+    }
 };

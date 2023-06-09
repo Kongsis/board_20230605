@@ -30,8 +30,8 @@ public class BoardDTO {
     private int fileAttached;
 //    private String originalFileName;
 //    private String storedFileName;
-    private List<String> originalFileName;
-    private List<String> storedFileName;
+private List<String> originalFileName = new ArrayList<>();
+    private List<String> storedFileName = new ArrayList<>();
 
     public static BoardDTO toDTO(BoardEntity boardEntity) {
         BoardDTO boardDTO = new BoardDTO();

@@ -65,11 +65,12 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable Long id, Model model) {
+    public String findById(@PathVariable Long id, @RequestParam("page") int page, Model model) {
         boardService.updateHits(id);
-        BoardDTO boardDTO = null;
+        model.addAttribute("page", page);
+//        BoardDTO boardDTO = null;
         try {
-            boardDTO = boardService.findById(id);
+            BoardDTO boardDTO = boardService.findById(id);
             model.addAttribute("board", boardDTO);
             List<CommentDTO> commentDTOList = commentService.findAll(id);
             if(commentDTOList.size() > 0) {
