@@ -1,11 +1,16 @@
 package com.example.board.service;
 
+import com.example.board.Util.UtilClass;
 import com.example.board.dto.BoardDTO;
 import com.example.board.entity.BoardEntity;
 import com.example.board.entity.BoardFileEntity;
 import com.example.board.repository.BoardFileRepository;
 import com.example.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -88,5 +93,21 @@ public class BoardService {
     public void update(BoardDTO boardDTO) {
         BoardEntity boardEntity = BoardEntity.toUpdateEntity(boardDTO);
         boardRepository.save(boardEntity);
+    }
+
+    public Page<BoardDTO> paging(Pageable pageable) {
+        // 사용자가 요청한 페이지보다 하나 작은값으로 요청해야 하기때문에 -1 을 해야함
+        int page = pageable.getPageNumber() -1;
+        int pageLimit = 5;
+        Page<BoardEntity> boardEntities =
+                boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC,"id")));
+        Page<BoardDTO> boardDTOS = boardEntities.map(boardEntity -> BoardDTO.builder()
+                                                    .id(boardEntity.getId())
+                                                    .boardTitle(boardEntity.getBoardTitle())
+                                                    .boardWriter(boardEntity.getBoardWriter())
+                                                    .createdAt(UtilClass.dateFormat(boardEntity.getCreatedAt()))
+                                                    .boardHits(boardEntity.getBoardHits())
+                                                    .build());
+        return boardDTOS;
     }
 }

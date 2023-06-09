@@ -5,6 +5,9 @@ import com.example.board.dto.CommentDTO;
 import com.example.board.service.BoardService;
 import com.example.board.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -38,6 +41,27 @@ public class BoardController {
         List<BoardDTO> boardDTOList = boardService.findAll();
         model.addAttribute("boardList", boardDTOList);
         return "boardPages/boardList";
+    }
+
+    // /board?page=1
+    @GetMapping
+    public String paging(@PageableDefault(page = 1) Pageable pageable, Model model) {
+        System.out.println("page = " + pageable.getPageNumber());
+        Page<BoardDTO> boardDTOS = boardService.paging(pageable);
+        model.addAttribute("boardList", boardDTOS);
+        // 시작페이지(startPage), 마지막페이지(endPage)값 계산
+        // 하단에 보여줄 페이지 갯수 3개
+        int blockLimit = 3;
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = ((startPage + blockLimit - 1) < boardDTOS.getTotalPages()) ? startPage + blockLimit - 1 : boardDTOS.getTotalPages();
+        if(boardDTOS.getTotalPages() > (startPage + blockLimit - 1)) {
+            endPage = startPage + blockLimit - 1;
+        } else {
+            endPage = boardDTOS.getTotalPages();
+        }
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        return "boardPages/boardPaging";
     }
 
     @GetMapping("/{id}")

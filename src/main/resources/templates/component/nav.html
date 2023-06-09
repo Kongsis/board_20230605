@@ -17,6 +17,13 @@
     <div class="menu">
         <a href="/board/">글목록</a>
     </div>
+    <div class="menu">
+        <!-- /board?page=1
+             7페이지에 있는 33번글 조회
+             rest api => /board/7/33
+             /board/33 => 33번글 -->
+        <a th:href="@{/board(page=1)}">페이징목록</a>
+    </div>
     <div class="menu search">
         <input type="text" placeholder="검색" id="q" style="display: inline-block;">
         <i class="bi bi-search" onclick="search_func()"></i>
