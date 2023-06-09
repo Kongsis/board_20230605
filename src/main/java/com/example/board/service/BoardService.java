@@ -95,12 +95,18 @@ public class BoardService {
         boardRepository.save(boardEntity);
     }
 
-    public Page<BoardDTO> paging(Pageable pageable) {
+    public Page<BoardDTO> paging(Pageable pageable, String type, String q) {
         // 사용자가 요청한 페이지보다 하나 작은값으로 요청해야 하기때문에 -1 을 해야함
         int page = pageable.getPageNumber() -1;
         int pageLimit = 5;
-        Page<BoardEntity> boardEntities =
-                boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC,"id")));
+        Page<BoardEntity> boardEntities = null;
+        if(type.equals("title")) {
+            boardEntities = boardRepository.findByBoardTitleContaining(q, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC,"id")));
+        } else if(type.equals("writer")) {
+            boardEntities = boardRepository.findByBoardWriterContaining(q, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC,"id")));
+        } else {
+            boardEntities = boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC,"id")));
+        }
         Page<BoardDTO> boardDTOS = boardEntities.map(boardEntity -> BoardDTO.builder()
                                                     .id(boardEntity.getId())
                                                     .boardTitle(boardEntity.getBoardTitle())

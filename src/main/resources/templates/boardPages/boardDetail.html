@@ -134,7 +134,9 @@
         // location.href = "/board/";
         // location.href = "/board?page=" + [[${page}]];
         const page = [[${page}]];
-        location.href = "/board?page=" + page;
+        const type = [[${type}]];
+        const q = [[${q}]];
+        location.href = "/board?page=" + page + "&type=" + type, "&q" + q;
     }
 
     // const update_req = () => {

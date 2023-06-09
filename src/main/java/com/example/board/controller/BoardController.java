@@ -45,29 +45,44 @@ public class BoardController {
 
     // /board?page=1
     @GetMapping
-    public String paging(@PageableDefault(page = 1) Pageable pageable, Model model) {
+    public String paging(@PageableDefault(page = 1) Pageable pageable,
+                         @RequestParam(value="type", required = false, defaultValue = "") String type,
+                         @RequestParam(value = "q", required = false, defaultValue = "") String q,
+                         Model model) {
         System.out.println("page = " + pageable.getPageNumber());
-        Page<BoardDTO> boardDTOS = boardService.paging(pageable);
-        model.addAttribute("boardList", boardDTOS);
+        Page<BoardDTO> boardDTOS = boardService.paging(pageable, type, q);
+//        model.addAttribute("boardList", boardDTOS);
+        if (boardDTOS.getTotalElements() == 0) {
+            model.addAttribute("boardList", null);
+        } else {
+            model.addAttribute("boardList", boardDTOS);
+        }
         // 시작페이지(startPage), 마지막페이지(endPage)값 계산
         // 하단에 보여줄 페이지 갯수 3개
         int blockLimit = 3;
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
         int endPage = ((startPage + blockLimit - 1) < boardDTOS.getTotalPages()) ? startPage + blockLimit - 1 : boardDTOS.getTotalPages();
-        if(boardDTOS.getTotalPages() > (startPage + blockLimit - 1)) {
-            endPage = startPage + blockLimit - 1;
-        } else {
-            endPage = boardDTOS.getTotalPages();
-        }
+//        if(boardDTOS.getTotalPages() > (startPage + blockLimit - 1)) {
+//            endPage = startPage + blockLimit - 1;
+//        } else {
+//            endPage = boardDTOS.getTotalPages();
+//        }
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
+        model.addAttribute("type", type);
+        model.addAttribute("q", q);
         return "boardPages/boardPaging";
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable Long id, @RequestParam("page") int page, Model model) {
+    public String findById(@PathVariable Long id, @RequestParam("page") int page,
+                           @RequestParam("type") String type,
+                           @RequestParam("q") String q,
+                           Model model) {
         boardService.updateHits(id);
         model.addAttribute("page", page);
+        model.addAttribute("type", type);
+        model.addAttribute("q", q);
 //        BoardDTO boardDTO = null;
         try {
             BoardDTO boardDTO = boardService.findById(id);
